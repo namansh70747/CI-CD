@@ -40,6 +40,18 @@ jobs:
 
       - name: Build for deployment
         run: go build -o app main.go
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+            tags: '${{ secrets.DOCKERHUB_USERNAME }}/simple-go-app:latest'
 
       - name: Deploy (simulation)
-        run: echo "App deployed successfully!"
+          run: echo 'Docker image pushed: ${{ secrets.DOCKERHUB_USERNAME }}/simple-go-app:latest'
